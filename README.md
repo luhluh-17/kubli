@@ -6,9 +6,9 @@ encryption.
 
 ## Example
 
-##![kubli](https://github.com/user-attachments/assets/5221b06e-7b8e-4dbf-823c-e7e316144d80)
+![kubli](https://github.com/user-attachments/assets/5221b06e-7b8e-4dbf-823c-e7e316144d80)
 
- Features
+## Features
 
 - **Directory-wide encryption/decryption** - Process multiple files at once
 - **Filename encryption** - Both file content and filenames are encrypted
@@ -148,6 +148,10 @@ The application includes comprehensive error handling for:
 ## Contributing
 
 Contributions are welcome! Please feel free to submit pull requests or open issues on GitHub.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
