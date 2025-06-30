@@ -12,16 +12,54 @@ def generate_key_from_password(password):
     key = hashlib.sha256(password.encode()).digest()
     return base64.urlsafe_b64encode(key)
 
-def encrypt_file(file_path, key):
-    """Encrypt a single file"""
+def encrypt_filename(filename, key):
+    """Encrypt a filename"""
     try:
         fernet = Fernet(key)
+        encrypted_filename = fernet.encrypt(filename.encode())
+        # Convert to base64 and remove padding characters that might cause filesystem issues
+        safe_filename = base64.urlsafe_b64encode(encrypted_filename).decode().replace('=', '_')
+        return safe_filename
+    except Exception as e:
+        print(f"Error encrypting filename {filename}: {e}")
+        return None
+
+def decrypt_filename(encrypted_filename, key):
+    """Decrypt a filename"""
+    try:
+        fernet = Fernet(key)
+        # Restore padding and decode
+        padded_filename = encrypted_filename.replace('_', '=')
+        encrypted_data = base64.urlsafe_b64decode(padded_filename)
+        decrypted_filename = fernet.decrypt(encrypted_data).decode()
+        return decrypted_filename
+    except Exception as e:
+        print(f"Error decrypting filename: {e}")
+        return None
+
+def encrypt_file(file_path, key):
+    """Encrypt a single file with filename encryption"""
+    try:
+        fernet = Fernet(key)
+        
+        # Read and encrypt file content
         with open(file_path, 'rb') as file:
             original_data = file.read()
         
         encrypted_data = fernet.encrypt(original_data)
         
-        with open(file_path + '.kubli', 'wb') as encrypted_file:
+        # Encrypt filename
+        original_filename = os.path.basename(file_path)
+        encrypted_filename = encrypt_filename(original_filename, key)
+        
+        if encrypted_filename is None:
+            return False
+        
+        # Create new encrypted file path
+        directory = os.path.dirname(file_path)
+        encrypted_file_path = os.path.join(directory, encrypted_filename + '.kubli')
+        
+        with open(encrypted_file_path, 'wb') as encrypted_file:
             encrypted_file.write(encrypted_data)
         
         return True
@@ -30,16 +68,27 @@ def encrypt_file(file_path, key):
         return False
     
 def decrypt_file(file_path, key):
-    """Decrypt a single file"""
+    """Decrypt a single file with filename decryption"""
     try:
         fernet = Fernet(key)
+        
+        # Read and decrypt file content
         with open(file_path, 'rb') as encrypted_file:
             encrypted_data = encrypted_file.read()
         
         decrypted_data = fernet.decrypt(encrypted_data)
         
-        # Remove .kubli extension
-        original_file_path = file_path.replace('.kubli', '')
+        # Decrypt filename
+        encrypted_filename = os.path.basename(file_path).replace('.kubli', '')
+        original_filename = decrypt_filename(encrypted_filename, key)
+        
+        if original_filename is None:
+            return False
+        
+        # Create original file path
+        directory = os.path.dirname(file_path)
+        original_file_path = os.path.join(directory, original_filename)
+        
         with open(original_file_path, 'wb') as decrypted_file:
             decrypted_file.write(decrypted_data)
         
@@ -145,7 +194,13 @@ def decrypt_directory():
     
     print(f"\nEncrypted files found ({len(encrypted_files)}):")
     for file_path in encrypted_files:
-        print(f"  - {os.path.basename(file_path)}")
+        # Try to decrypt filename for display
+        encrypted_filename = os.path.basename(file_path).replace('.kubli', '')
+        original_filename = decrypt_filename(encrypted_filename, key)
+        if original_filename:
+            print(f"  - {os.path.basename(file_path)} → {original_filename}")
+        else:
+            print(f"  - {os.path.basename(file_path)} (filename decryption failed)")
     
     confirm = input("\nProceed with decryption? (y/N): ").lower()
     if confirm != 'y':
@@ -174,6 +229,7 @@ def decrypt_directory():
                     print(f"Error deleting {file_path}: {e}")
     
     print(f"\nDecryption complete! {len(successful_decryptions)} files decrypted.")
+
 
 print(r"""
 +----------------------------------------------------------------+
