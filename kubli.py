@@ -29,6 +29,25 @@ def encrypt_file(file_path, key):
         print(f"Error encrypting {file_path}: {e}")
         return False
     
+def decrypt_file(file_path, key):
+    """Decrypt a single file"""
+    try:
+        fernet = Fernet(key)
+        with open(file_path, 'rb') as encrypted_file:
+            encrypted_data = encrypted_file.read()
+        
+        decrypted_data = fernet.decrypt(encrypted_data)
+        
+        # Remove .kubli extension
+        original_file_path = file_path.replace('.kubli', '')
+        with open(original_file_path, 'wb') as decrypted_file:
+            decrypted_file.write(decrypted_data)
+        
+        return True
+    except Exception as e:
+        print(f"Error decrypting {file_path}: {e}")
+        return False
+    
 def encrypt_directory():
     """Encrypt files in the current directory"""
     print("--- Data Encryption ---")
@@ -95,7 +114,67 @@ def encrypt_directory():
                     print(f"Error deleting {file_path}: {e}")
     
     print(f"\nEncryption complete! {len(successful_encryptions)} files encrypted.")
+
+def decrypt_directory():
+    """Decrypt files in the current directory"""
+    print("--- Data Decryption ---")
     
+    # Get decryption key from user
+    password = input("Enter decryption key: ")
+    if not password:
+        print("Error: Decryption key cannot be empty!")
+        return
+    
+    key = generate_key_from_password(password)
+    
+    # Get current directory
+    directory = input("Enter directory path (or press Enter for current directory): ").strip()
+    if not directory:
+        directory = os.getcwd()
+    
+    if not os.path.exists(directory):
+        print(f"Error: Directory '{directory}' does not exist!")
+        return
+    
+    # List all encrypted files in directory
+    encrypted_files = glob.glob(os.path.join(directory, "*.kubli"))
+    
+    if not encrypted_files:
+        print("No encrypted files found!")
+        return
+    
+    print(f"\nEncrypted files found ({len(encrypted_files)}):")
+    for file_path in encrypted_files:
+        print(f"  - {os.path.basename(file_path)}")
+    
+    confirm = input("\nProceed with decryption? (y/N): ").lower()
+    if confirm != 'y':
+        print("Decryption cancelled.")
+        return
+    
+    # Decrypt files
+    successful_decryptions = []
+    for file_path in encrypted_files:
+        print(f"Decrypting: {os.path.basename(file_path)}")
+        if decrypt_file(file_path, key):
+            successful_decryptions.append(file_path)
+            print(f"  ✓ Decrypted successfully")
+        else:
+            print(f"  ✗ Failed to decrypt (wrong key?)")
+    
+    # Delete encrypted files if decryption was successful
+    if successful_decryptions:
+        delete_confirm = input(f"\nDelete {len(successful_decryptions)} encrypted files? (y/N): ").lower()
+        if delete_confirm == 'y':
+            for file_path in successful_decryptions:
+                try:
+                    os.remove(file_path)
+                    print(f"Deleted: {os.path.basename(file_path)}")
+                except Exception as e:
+                    print(f"Error deleting {file_path}: {e}")
+    
+    print(f"\nDecryption complete! {len(successful_decryptions)} files decrypted.")
+
 print(r"""
 +----------------------------------------------------------------+
 |                     _           _     _  _                     |
@@ -125,7 +204,7 @@ while True:
     if option == "1":
         encrypt_directory()
     elif option == "2":
-        print("\n--- Data Decryption ---")
+        decrypt_directory()
     elif option == "4":
         print("\nThank you for using Kubli!")
         print("Goodbye!")
