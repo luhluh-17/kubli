@@ -236,9 +236,10 @@ def decrypt_directory():
     
     print(f"\n{Fore.GREEN}{Style.BRIGHT}Decryption complete! {len(successful_decryptions)} files decrypted.")
 
-
-print(f"{Fore.CYAN}{Style.BRIGHT}")
-print(r"""
+def display_banner():
+    """Display the application banner and info"""
+    print(f"{Fore.CYAN}{Style.BRIGHT}")
+    print(r"""
 +----------------------------------------------------------------+
 |                     _           _     _  _                     |
 |                    | |         | |   | |(_)                    |
@@ -248,31 +249,41 @@ print(r"""
 |                    |_| \_)____/|____/ \_)_|                    |
 +----------------------------------------------------------------+
 """)
+    
+    print(f"{Fore.MAGENTA}In Tagalog, \"kubli\" generally means hidden, concealed, or secret")
+    print("\n")
+    print(f"{Fore.BLUE}Version: {Fore.WHITE}{VERSION}")
+    print(f"{Fore.BLUE}Author: {Fore.WHITE}{AUTHOR}")
+    print(f"{Fore.BLUE}GitHub: {Fore.WHITE}{GITHUB}")
+    print("\n")
+    
+def main_menu():
+    """Display main menu and handle user input"""
+    while True:
+        print(f"{Fore.CYAN}Please select an option:")
+        print(f"{Fore.GREEN}1. Encrypt")
+        print(f"{Fore.GREEN}2. Decrypt")
+        print(f"{Fore.RED}4. Exit")
 
-print(f"In Tagalog, \"kubli\" generally means hidden, concealed, or secret")
-print("\n")
-print(f"{Fore.BLUE}Version: {Fore.WHITE}{VERSION}")
-print(f"{Fore.BLUE}Author: {Fore.WHITE}{AUTHOR}")
-print(f"{Fore.BLUE}GitHub: {Fore.WHITE}{GITHUB}")
-print("\n")
+        option = input(f"\n{Fore.YELLOW}Enter your option: ")
 
-# User menu options
-while True:
-    print(f"{Fore.CYAN}Please select an option:")
-    print(f"{Fore.GREEN}1. Encrypt")
-    print(f"{Fore.GREEN}2. Decrypt")
-    print(f"{Fore.RED}4. Exit")
+        if option == "1":
+            encrypt_directory()
+        elif option == "2":
+            decrypt_directory()
+        elif option == "4":
+            print(f"\n{Fore.GREEN}Thank you for using Kubli!")
+            print(f"{Fore.GREEN}Goodbye!")
+            break
+        else:
+            print(f"\n{Fore.RED}Invalid option! Please select a number specified in the menu.")
+            print("\n")
 
-    option = input(f"\n{Fore.YELLOW}Enter your option: ")
+def main():
+    """Main function to run the application"""
+    display_banner()
+    main_menu()
 
-    if option == "1":
-        encrypt_directory()
-    elif option == "2":
-        decrypt_directory()
-    elif option == "4":
-        print(f"\n{Fore.GREEN}Thank you for using Kubli!")
-        print(f"{Fore.GREEN}Goodbye!")
-        break
-    else:
-        print(f"\n{Fore.RED}Invalid option! Please select a number specified in the menu.")
-        print("\n")
+# Run the application
+if __name__ == "__main__":
+    main()
