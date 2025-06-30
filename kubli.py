@@ -10,7 +10,8 @@ init(autoreset=True)
 
 # Constants
 VERSION = "0.1.0v"
-AUTHOR = "https://github.com/luhluh-17"
+AUTHOR = "Ralph Joseph Castro"
+GITHUB = "https://github.com/luhluh-17"
 
 def generate_key_from_password(password):
     """Generate a Fernet key from a password"""
@@ -252,6 +253,7 @@ print(f"In Tagalog, \"kubli\" generally means hidden, concealed, or secret")
 print("\n")
 print(f"{Fore.BLUE}Version: {Fore.WHITE}{VERSION}")
 print(f"{Fore.BLUE}Author: {Fore.WHITE}{AUTHOR}")
+print(f"{Fore.BLUE}GitHub: {Fore.WHITE}{GITHUB}")
 print("\n")
 
 # User menu options
