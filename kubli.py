@@ -394,7 +394,7 @@ def display_banner():
     AUTHOR = "Ralph Joseph Castro"
     GITHUB = "https://github.com/luhluh-17"
 
-    print(f"{Fore.MAGENTA}{Style.BRIGHT}+---------------------------------------------------------------+")
+    print(f"{Fore.MAGENTA}{Style.BRIGHT}+----------------------------------------------------------------+")
     print(f"{Fore.MAGENTA}{Style.BRIGHT}|                     _           _     _  _                     |")
     print(f"{Fore.MAGENTA}{Style.BRIGHT}|                    | |         | |   | |(_)                    |")
     print(f"{Fore.MAGENTA}{Style.BRIGHT}|                    | |  _ _   _| |__ | | _                     |")
