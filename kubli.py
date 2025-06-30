@@ -8,10 +8,6 @@ from colorama import init, Fore, Back, Style
 # Initialize colorama for cross-platform support
 init(autoreset=True)
 
-# Constants
-VERSION = "0.1.0v"
-AUTHOR = "Ralph Joseph Castro"
-GITHUB = "https://github.com/luhluh-17"
 
 def generate_key_from_password(password):
     """Generate a Fernet key from a password"""
@@ -237,18 +233,26 @@ def decrypt_directory():
     print(f"\n{Fore.GREEN}{Style.BRIGHT}Decryption complete! {len(successful_decryptions)} files decrypted.")
 
 def display_banner():
-    """Display the application banner and info"""
-    print(f"{Fore.CYAN}{Style.BRIGHT}")
-    print(r"""
-+----------------------------------------------------------------+
-|                     _           _     _  _                     |
-|                    | |         | |   | |(_)                    |
-|                    | |  _ _   _| |__ | | _                     |
-|                    | |_/ ) | | |  _ \| || |                    |
-|                    |  _ (| |_| | |_) ) || |                    |
-|                    |_| \_)____/|____/ \_)_|                    |
-+----------------------------------------------------------------+
-""")
+    """
+    Display the application banner with ASCII art and metadata.
+    
+    Shows the Kubli logo, application description, version, author, and GitHub info.
+    
+    Returns:
+        None
+    """
+    VERSION = "0.1.0v"
+    AUTHOR = "Ralph Joseph Castro"
+    GITHUB = "https://github.com/luhluh-17"
+
+    print(f"{Fore.MAGENTA}{Style.BRIGHT}+----------------------------------------------------------------+")
+    print(f"{Fore.MAGENTA}{Style.BRIGHT}|                     _           _     _  _                     |")
+    print(f"{Fore.MAGENTA}{Style.BRIGHT}|                    | |         | |   | |(_)                    |")
+    print(f"{Fore.MAGENTA}{Style.BRIGHT}|                    | |  _ _   _| |__ | | _                     |")
+    print(f"{Fore.MAGENTA}{Style.BRIGHT}|                    | |_/ ) | | |  _ \\| || |                    |")
+    print(f"{Fore.MAGENTA}{Style.BRIGHT}|                    |  _ (| |_| | |_) ) || |                    |")
+    print(f"{Fore.MAGENTA}{Style.BRIGHT}|                    |_| \\_)____/|____/ \\_)_|                    |")
+    print(f"{Fore.MAGENTA}{Style.BRIGHT}+----------------------------------------------------------------+")
     
     print(f"{Fore.MAGENTA}In Tagalog, \"kubli\" generally means hidden, concealed, or secret")
     print("\n")
@@ -258,12 +262,19 @@ def display_banner():
     print("\n")
     
 def main_menu():
-    """Display main menu and handle user input"""
+    """
+    
+    Displays a menu with encryption/decryption options and handles user input.
+    Runs in an infinite loop until user selects exit option (3).
+    
+    Returns:
+        None
+    """
     while True:
         print(f"{Fore.CYAN}Please select an option:")
         print(f"{Fore.GREEN}1. Encrypt")
         print(f"{Fore.GREEN}2. Decrypt")
-        print(f"{Fore.RED}4. Exit")
+        print(f"{Fore.RED}3. Exit")
 
         option = input(f"\n{Fore.YELLOW}Enter your option: ")
 
@@ -271,7 +282,7 @@ def main_menu():
             encrypt_directory()
         elif option == "2":
             decrypt_directory()
-        elif option == "4":
+        elif option == "3":
             print(f"\n{Fore.GREEN}Thank you for using Kubli!")
             print(f"{Fore.GREEN}Goodbye!")
             break
@@ -280,7 +291,12 @@ def main_menu():
             print("\n")
 
 def main():
-    """Main function to run the application"""
+    """
+    Main entry point for the Kubli file encryption/decryption application.
+    
+    Returns:
+        None
+    """
     display_banner()
     main_menu()
 
